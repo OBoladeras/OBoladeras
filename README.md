@@ -32,3 +32,11 @@
 ### OS
 [![Linux](https://img.shields.io/badge/linux-black?style=for-the-badge&logo=Linux)]()
 [![Windows](https://img.shields.io/badge/Windows-black?style=for-the-badge&logo=Windows)]()
+
+<div align='right'>
+<h3> Currently Learning </h3>
+
+[![WPF](https://img.shields.io/badge/WPF-black?style=for-the-badge&logo=.net)](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netframeworkdesktop-4.8)
+[![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![IronPython](https://img.shields.io/badge/IronPython-black?style=for-the-badge&logo=python)](https://ironpython.net/)
+</div>
