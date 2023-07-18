@@ -17,6 +17,7 @@
 [![Pandas](https://img.shields.io/badge/pandas-black?style=for-the-badge&logo=pandas)](https://pypi.org/project/pandas/)
 [![Flask](https://img.shields.io/badge/-Flask-black?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
 [![Netmiko](https://img.shields.io/badge/netmiko-black?style=for-the-badge&logo=python)](https://pypi.org/project/netmiko/)
+[![Socket](https://img.shields.io/badge/Socket-black?style=for-the-badge&logo=python)]([https://pypi.org/project/socket](https://docs.python.org/3/library/socket.html)/)
 
 ### Frameworks
 [![HTML5](https://img.shields.io/badge/html5-black?style=for-the-badge&logo=html5)]()
@@ -38,5 +39,4 @@
 
 [![WPF](https://img.shields.io/badge/WPF-black?style=for-the-badge&logo=.net)](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/?view=netframeworkdesktop-4.8)
 [![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
-[![IronPython](https://img.shields.io/badge/IronPython-black?style=for-the-badge&logo=python)](https://ironpython.net/)
 </div>
