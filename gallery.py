@@ -1,93 +1,88 @@
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
-
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
-creds = Credentials.from_service_account_file(
-    'credentials.json', scopes=SCOPES)
-
-service = build('drive', 'v3', credentials=creds)
+import os
+from PIL import Image
+from PIL.ExifTags import TAGS
 
 
-class Gallery:
-    def __init__(self, parent_folder_id):
-        self.parent_folder_id = parent_folder_id
+def get_categories():
+    categories = {}
+    for entry in os.scandir("static/gallery"):
+        if entry.is_dir():
+            categories[entry.name] = get_images(entry.name)
 
-    def get_categories(self) -> dict[str, list[dict[str, str]]]:
-        r"""
-        Get all the folders in the parent folder and their images.
+    return categories
 
-        Returns:
-        dict[str, list[dict[str, str]]]: A dictionary where the key is the folder name and the value is a list of dictionaries containing the image details.
 
-        Example:
-            {
-                'Folder 1': [
-                    {'src': 'https://drive.google.com/uc?id=1_vDkfinUuyvOXi0-fzBzUnUGhwmhsshq', 'alt': 'Image 1', 'name': 'Image 1', 'size': '1.23 MB'},
-                    {'src': 'https://drive.google.com/uc?id=1_vDkfinUuyvOXi0-fzBzUnUGhwmhsshq', 'alt': 'Image 2', 'name': 'Image 2', 'size': '1.23 MB'}
-                ],
-                'Folder 2': [
-                    {'src': 'https://drive.google.com/uc?id=1_vDkfinUuyvOXi0-fzBzUnUGhwmhsshq', 'alt': 'Image 4', 'name': 'Image 4', 'size': '1.23 MB'},
-                    {'src': 'https://drive.google.com/uc?id=1_vDkfinUuyvOXi0-fzBzUnUGhwmhsshq', 'alt': 'Image 5', 'name': 'Image 5', 'size': '1.23 MB'}
-                ]
+def get_images(category: str):
+    data = []
+
+    for entry in os.scandir(f"static/gallery/{category}"):
+        if entry.is_file():
+            tmp = {
+                "name": entry.name,
+                "path": entry.path,
+                "size": os.path.getsize(entry.path),
             }
-        """
-        query = f"'{
-            self.parent_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
 
-        results = service.files().list(q=query, fields="files(id, name)").execute()
-        folders = results.get('files', [])
-        gallery = {}
+            image = Image.open(entry)
+            exif_data = image._getexif()
+            if exif_data:
 
-        if not folders:
-            print("No folders found.")
-        else:
-            for folder in folders:
-                gallery[folder['name']] = self.get_images(folder['id'])
+                exif = {}
+                for tag, value in exif_data.items():
+                    decoded = TAGS.get(tag, tag)
+                    exif[decoded] = value
 
-        return gallery
+                tmp["iso"] = exif.get("ISOSpeedRatings")
+                tmp["aperture"] = exif.get("FNumber")
+                tmp["shutter_speed"] = exif.get("ExposureTime")
+            else:
+                tmp["iso"] = None
+                tmp["aperture"] = None
+                tmp["shutter_speed"] = None
 
-    def get_images(self, parent_folder_id: str) -> list[dict[str, str]]:
-        r"""
-        Get all the images in the folder.
+            data.append(tmp)
 
-        Args:
-        parent_folder_id (str): The ID of the parent folder.
-        """
+    return data
 
-        query = f"'{
-            parent_folder_id}' in parents and (mimeType contains 'image/') and trashed = false"
 
-        results = service.files().list(
-            q=query, fields="files(id, name, mimeType, size, description)").execute()
-        images = results.get('files', [])
-        data = []
+def set_resolution() -> str:
+    max_size = 1920
 
-        if not images:
-            print("No images found.")
-        else:
-            for image in images:
-                tmp = {}
-                tmp['src'] = f"https://drive.google.com/uc?id={image['id']}"
-                tmp['alt'] = image['name']
-                tmp['name'] = image['name']
-                description = image.get(
-                    'description', 'No description available')
+    for folder in os.scandir("static/gallery"):
+        if folder.is_dir():
+            for entry in os.scandir(folder.path):
+                path = entry.path
+                if entry.is_file():
 
-                print(f" - Description: {description}")
+                    img = Image.open(path)
+                    original_width, original_height = img.size
 
-                size = image.get('size', 'Unknown')
-                if size != 'Unknown':
-                    size = int(size)
-                    if size >= 1024 * 1024:
-                        size = f"{size / (1024 * 1024):.2f} MB"
-                    elif size >= 1024:
-                        size = f"{size / 1024:.2f} KB"
+                    if original_width > max_size:
+                        percent = max_size / float(original_width)
+                        new_height = int((float(original_height) * percent))
+
+                        size = (max_size, new_height)
+                    elif original_height > max_size:
+                        percent = max_size / float(original_height)
+                        new_width = int((float(original_width) * percent))
+                        size = (new_width, max_size)
+
+                    if original_width > max_size or original_height > max_size:
+                        exif_data = img.info.get('exif', None)
+
+                        img = img.resize(size)
+                        print(f"Resized to: {size}")
+
+                        if exif_data:
+                            img.save(path, exif=exif_data)
+                        else:
+                            img.save(path)
+
+                        print(f"Saved: {path}")
                     else:
-                        size = f"{size} B"
-                tmp['size'] = size
-
-                data.append(tmp)
-
-        return data
+                        print(
+                            f"Image {path} is already smaller than the max size.")
 
 
+if __name__ == "__main__":
+    set_resolution()

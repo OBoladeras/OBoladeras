@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0;
+        }
+
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+
+            border: 1px solid #000;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+        }
+
+        .photoContainer {
+            width: 98%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 0 1%
+        }
+
+        .photoContainer>* {
+            flex: 1 1 25rem;
+        }
+
+        .image {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .info {
+            height: 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 1rem;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #000;
+
+            border-top: none;
+            margin-top: -5%;
+        }
+
+
+        @media (max-width:768px) {
+            .photoContainer>* {
+                flex: 1 1 20%
+            }
+
+            p {
+                font-size: 1rem
+            }
+
+            #tableData_filter label {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 2rem
+            }
+
+            .photoContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem
+            }
+
+            .image {
+                width: 90%;
+                margin: 0;
+                padding: 0;
+                min-height: none
+            }
+
+            .info {
+                font-size: 1.5rem;
+                height: 75px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Photo Gallery</h1>
+
+    {% for category in gallery %}
+    <h2>{{ category }}</h2>
+    <div class="photoContainer">
+        {% for image in gallery[category] %}
+        <div class="image">
+            <img data-src="/{{ image['path'] }}" alt="{{ image['name'] }}" class="lazyload">
+            <div class="info">
+                <div>
+                    <p><b>{{ image.filename }}</b> - {{ image.size }}</p>
+                    <p>{{ image.date }}</p>
+                </div>
+                <br><br>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <script src="{{ url_for('static', filename='js/lazysizes.min.js') }}"></script>
+</body>
+
+</html>

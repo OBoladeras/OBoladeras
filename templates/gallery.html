@@ -24,18 +24,13 @@
         <h1 class="text-center mb-4">Photo Gallery</h1>
 
         {% for category in gallery %}
-        <p>{{gallery[category]}}</p>
-        <h2 class="my-4">{{ category["name"] }}</h2>
-        <div class="row gallery">
-            {% for image in gallery[category] %}
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                <div class="card">
-                    <img src="{{ image.src }}" class="card-img-top" alt="{{ image.alt }}">
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+        <h2>{{ category }}</h2>
+
+        {% for image in gallery[category] %}
+        <img src="{{image['path']}}" alt="">
         {% endfor %}
+    </div>
+    {% endfor %}
     </div>
 
     <script>
