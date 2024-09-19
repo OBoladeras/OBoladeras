@@ -14,6 +14,7 @@
 [![Bash](https://img.shields.io/badge/bash-black?style=for-the-badge&logo=gnu-bash&logoColor=white)]()
 [![DOCKER](https://img.shields.io/badge/docker-black?style=for-the-badge&logo=docker)]()
 [![JavaScript](https://img.shields.io/badge/JavaScript-black?style=for-the-badge&logo=JavaScript)]()
+[![Arduino](https://img.shields.io/badge/Arduino-black?style=for-the-badge&logo=Arduino)]()
 [![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=csharp)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 
 ### Frameworks

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        .gallery img {
+            object-fit: cover;
+            width: 100%;
+            height: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Photo Gallery</h1>
+
+        {% for category in gallery %}
+        <p>{{gallery[category]}}</p>
+        <h2 class="my-4">{{ category["name"] }}</h2>
+        <div class="row gallery">
+            {% for image in gallery[category] %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card">
+                    <img src="{{ image.src }}" class="card-img-top" alt="{{ image.alt }}">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.querySelectorAll('.gallery img').forEach(image => {
+            image.addEventListener('click', function () {
+                const modalImage = document.getElementById('modalImage');
+                modalImage.src = this.src;
+                const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
+                modal.show();
+            });
+        });
+    </script>
+</body>
+
+</html>
